@@ -2,6 +2,7 @@ package org.example.fxdatawarehouse.Services.Impl;
 
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.fxdatawarehouse.DTO.DealDTO;
 import org.example.fxdatawarehouse.DTO.DealResponseDTO;
 import org.example.fxdatawarehouse.Exceptions.AlreadyExistsException;
@@ -20,10 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class DealServiceImpl implements DealService {
     private final DealRepository dealRepository;
     private final ModelMapper modelMapper;
-    private final Logger logger = Logger.getLogger(DealServiceImpl.class.getName());
 
     @Override
     public DealResponseDTO saveDeal(DealDTO dealDTO) {
@@ -56,9 +57,9 @@ public class DealServiceImpl implements DealService {
             try {
                 result.add(saveDeal(dealDTO));
             } catch (AlreadyExistsException e) {
-                logger.info("Deal with id " + dealDTO.getId() + " already exists");
+                log.info("Deal with id " + dealDTO.getId() + " already exists");
             }catch (CurrencyPatternException e) {
-                logger.info("Currency " + dealDTO.getFromCurrency() + " is invalid");
+                log.info("Currency " + dealDTO.getFromCurrency() + " is invalid");
             }
         });
         return result;
