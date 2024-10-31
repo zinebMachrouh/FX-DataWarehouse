@@ -7,4 +7,4 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface DealRepository extends JpaRepository<Deal, UUID> { }
+public interface DealRepository extends JpaRepository<Deal, String> { }
