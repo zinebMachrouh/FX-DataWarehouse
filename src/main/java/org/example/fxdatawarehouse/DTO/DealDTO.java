@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.UUID;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class DealDTO {
 
     // The client request may include an id, which determines different handling in the service layer.
     @Builder.Default
-    private String id = "";
+    private String id = UUID.randomUUID().toString();
 
     @NotBlank(message = "fromCurrency is required")
     @Size(min = 3, max = 3, message = "fromCurrency must be 3 characters")

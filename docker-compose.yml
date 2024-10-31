@@ -1,0 +1,39 @@
+version: "3.1"
+services:
+  db:
+    container_name: FXDataWarehouse-DB
+    image: "postgres:15"
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: "FXDataWarehouse"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - network-data
+  spring-app:
+    container_name: FXDataWarehouse
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5434/FXDataWarehouse
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SWAGGER_ACTIVATION=false
+    networks:
+      - network-data
+    depends_on:
+      - db
+networks:
+  network-data:
+    driver: bridge
+
+volumes:
+  db:
+    driver: local

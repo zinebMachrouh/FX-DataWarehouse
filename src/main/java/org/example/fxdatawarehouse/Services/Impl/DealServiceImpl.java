@@ -13,6 +13,7 @@ import org.example.fxdatawarehouse.Services.DealService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -38,6 +39,7 @@ public class DealServiceImpl implements DealService {
             throw new AlreadyExistsException("Deal with id " + dealDTO.getId() + " already exists");
         }
         Deal deal = modelMapper.map(dealDTO, Deal.class);
+        deal.setDealTimestamp(LocalDateTime.now());
         deal = dealRepository.save(deal);
         return modelMapper.map(deal, DealResponseDTO.class);
     }
@@ -66,7 +68,7 @@ public class DealServiceImpl implements DealService {
     }
 
     private boolean isValidCurrency(String currency) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
+        Pattern pattern = Pattern.compile("^[a-zA-Z]{3}$");
         return pattern.matcher(currency).matches();
     }
 }
