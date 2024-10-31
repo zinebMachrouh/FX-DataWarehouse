@@ -7,6 +7,8 @@ import org.example.fxdatawarehouse.Repositories.DealRepository;
 import org.example.fxdatawarehouse.Services.DealService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @NoArgsConstructor
 @AllArgsConstructor

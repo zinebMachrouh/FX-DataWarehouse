@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Deal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(name = "from_currency", nullable = false)
     private String fromCurrency;
