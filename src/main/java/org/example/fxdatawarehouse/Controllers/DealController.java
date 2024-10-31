@@ -29,7 +29,7 @@ public class DealController {
     }
 
     @PostMapping("/batchSave")
-    public ResponseEntity<List<DealResponseDTO>> createBatch(@Valid @RequestBody ArrayList<DealDTO> dealDTOs) {
+    public ResponseEntity<List<DealResponseDTO>> createBatch(@RequestBody List< DealDTO> dealDTOs) {
         return new ResponseEntity<>(dealService.saveBatch(dealDTOs), HttpStatus.CREATED);
     }
 }
