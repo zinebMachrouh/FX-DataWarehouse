@@ -1,2 +1,4 @@
-run-project:
-	docker-compose up -d --build
+run_build:
+	docker compose up -d --build
+run:
+	docker compose up -d
