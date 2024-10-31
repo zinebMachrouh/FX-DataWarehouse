@@ -9,13 +9,14 @@ import org.example.fxdatawarehouse.Exceptions.CurrencyPatternException;
 import org.example.fxdatawarehouse.Models.Deal;
 import org.example.fxdatawarehouse.Repositories.DealRepository;
 import org.example.fxdatawarehouse.Services.DealService;
-import org.example.fxdatawarehouse.Utils.CurrencyValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,11 +27,11 @@ public class DealServiceImpl implements DealService {
 
     @Override
     public DealResponseDTO saveDeal(DealDTO dealDTO) {
-        if (!CurrencyValidator.isValidCurrency(dealDTO.getFromCurrency())) {
-            throw new CurrencyPatternException("Currency " + dealDTO.getFromCurrency() + " must be between 2 and 3 characters");
+        if (!isValidCurrency(dealDTO.getFromCurrency())) {
+            throw new CurrencyPatternException("Currency " + dealDTO.getFromCurrency() + " must be 3 characters");
         }
-        if (!CurrencyValidator.isValidCurrency(dealDTO.getToCurrency())) {
-            throw new CurrencyPatternException("Currency " + dealDTO.getToCurrency() + " must be between 2 and 3 characters");
+        if (!isValidCurrency(dealDTO.getToCurrency())) {
+            throw new CurrencyPatternException("Currency " + dealDTO.getToCurrency() + " must be 3 characters");
         }
         if (!dealDTO.getId().isEmpty() && dealRepository.existsById(dealDTO.getId())) {
             throw new AlreadyExistsException("Deal with id " + dealDTO.getId() + " already exists");
@@ -42,7 +43,10 @@ public class DealServiceImpl implements DealService {
 
     @Override
     public List<DealResponseDTO> getAllDeals() {
-        return modelMapper.map(dealRepository.findAll(), List.class);
+        List<Deal> deals = dealRepository.findAll();
+        return deals.stream()
+                .map(deal -> modelMapper.map(deal, DealResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -58,5 +62,10 @@ public class DealServiceImpl implements DealService {
             }
         });
         return result;
+    }
+
+    private boolean isValidCurrency(String currency) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
+        return pattern.matcher(currency).matches();
     }
 }

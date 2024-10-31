@@ -25,5 +25,5 @@ public class Deal {
     private LocalDateTime dealTimestamp;
 
     @Column(name = "deal_amount", nullable = false)
-    private Double amount;
+    private Integer amount;
 }
