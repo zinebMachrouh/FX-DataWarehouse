@@ -12,15 +12,16 @@ import org.example.fxdatawarehouse.Repositories.DealRepository;
 import org.example.fxdatawarehouse.Services.DealService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
+@Validated
 @AllArgsConstructor
 @Slf4j
 public class DealServiceImpl implements DealService {

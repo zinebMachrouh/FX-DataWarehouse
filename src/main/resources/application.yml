@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: FX-DataWarehouse
+  datasource:
+    username: admin
+    password: admin
+    url: jdbc:postgresql://localhost:5434/FXDataWarehouse
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8085
+
+debug: true
