@@ -1,13 +1,15 @@
 package org.example.fxdatawarehouse.Services.Impl;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 import org.example.fxdatawarehouse.DTO.DealDTO;
 import org.example.fxdatawarehouse.DTO.DealResponseDTO;
 import org.example.fxdatawarehouse.Exceptions.AlreadyExistsException;
+import org.example.fxdatawarehouse.Exceptions.CurrencyPatternException;
 import org.example.fxdatawarehouse.Models.Deal;
 import org.example.fxdatawarehouse.Repositories.DealRepository;
 import org.example.fxdatawarehouse.Services.DealService;
+import org.example.fxdatawarehouse.Utils.CurrencyValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,13 @@ public class DealServiceImpl implements DealService {
 
     @Override
     public DealResponseDTO saveDeal(DealDTO dealDTO) {
-        if (!dealDTO.getId().toString().isEmpty() && dealRepository.existsById(dealDTO.getId())) {
+        if (!CurrencyValidator.isValidCurrency(dealDTO.getFromCurrency())) {
+            throw new CurrencyPatternException("Currency " + dealDTO.getFromCurrency() + " must be between 2 and 3 characters");
+        }
+        if (!CurrencyValidator.isValidCurrency(dealDTO.getToCurrency())) {
+            throw new CurrencyPatternException("Currency " + dealDTO.getToCurrency() + " must be between 2 and 3 characters");
+        }
+        if (!dealDTO.getId().isEmpty() && dealRepository.existsById(dealDTO.getId())) {
             throw new AlreadyExistsException("Deal with id " + dealDTO.getId() + " already exists");
         }
         Deal deal = modelMapper.map(dealDTO, Deal.class);
@@ -39,14 +47,16 @@ public class DealServiceImpl implements DealService {
 
     @Override
     public List<DealResponseDTO> saveBatch(List<DealDTO> dealDTOs) {
-        List<DealResponseDTO> result = new ArrayList<>();
+        ArrayList<DealResponseDTO> result = new ArrayList<>();
         dealDTOs.forEach(dealDTO -> {
             try {
                 result.add(saveDeal(dealDTO));
             } catch (AlreadyExistsException e) {
                 logger.info("Deal with id " + dealDTO.getId() + " already exists");
+            }catch (CurrencyPatternException e) {
+                logger.info("Currency " + dealDTO.getFromCurrency() + " is invalid");
             }
         });
-        return (ArrayList<DealResponseDTO>) result;
+        return result;
     }
 }
